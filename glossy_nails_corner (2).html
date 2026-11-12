@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOSSY NAILS CORNER — Luxury at Your Fingertips</title>
+    <!-- Meta tags for SEO & Luxury Brand Identity -->
+    <meta name="description" content="Glossy Nails Corner - Premier home-based luxury nail studio in Bhayandar East, Mumbai. Premium nail extensions, custom nail art, gel polish, and handcrafted luxury press-on nails.">
+    <meta name="theme-color" content="#2C1E1A">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & React DOM CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    
+    <!-- Babel standalone for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        champagne: '#FAF6F0',
+                        blush: '#F5E6E4',
+                        ivory: '#FFFDF9',
+                        nude: '#EAE0D5',
+                        espresso: '#2C1E1A',
+                        gold: '#C5A059',
+                        goldHover: '#B28E46',
+                        glassBg: 'rgba(250, 246, 240, 0.85)',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'luxury': '0 20px 40px -15px rgba(44, 30, 26, 0.07)',
+                        'glow': '0 0 25px rgba(197, 160, 89, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Luxury Styling & Animations */
+        body {
+            background-color: #FAF6F0;
+            color: #2C1E1A;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Glassmorphism */
+        .glass-header {
+            background: rgba(250, 246, 240, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+        }
+
+        .glass-card {
+            background: rgba(255, 253, 249, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(234, 224, 213, 0.8);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #2C1E1A 0%, #C5A059 50%, #2C1E1A 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border-glow:focus, .gold-border-glow:hover {
+            border-color: #C5A059;
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
+        }
+
+        /* Smooth Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF6F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #EAE0D5;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C5A059;
+        }
+    </style>
+</head>
+<body class="selection:bg-gold selection:text-white">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Default Configurable Data (Persisted to localStorage if edited in Studio Mode)
+        const DEFAULT_CONFIG = {
+            facebookUrl: "https://facebook.com/profile.php?id=adrija.samanta.placeholder", // Editable by owner
+            pressOnProducts: [
+                { id: 1, name: "Rose Quartz French Glam", desc: "Hand-sculpted nude pink base with subtle gold foil accents.", price: "₹499", image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800&auto=format&fit=crop" },
+                { id: 2, name: "Glazed Donut Chrome", desc: "Iridescent pearlescent sheen over delicate blush extension.", price: "₹599", image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=800&auto=format&fit=crop" },
+                { id: 3, name: "Champagne Velvet Gold", desc: "Cat-eye velvet magnetic effect with micro-gold rhinestones.", price: "₹650", image: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=800&auto=format&fit=crop" },
+                { id: 4, name: "Bridal Floral Elegance", desc: "3D gel flowers with soft pearl encapsulation on almond tip.", price: "₹750", image: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?q=80&w=800&auto=format&fit=crop" },
+                { id: 5, name: "Espresso Minimalist Lines", desc: "Sleek geometric line art on deep warm beige glossy canvas.", price: "₹450", image: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?q=80&w=800&auto=format&fit=crop" },
+                { id: 6, name: "Soft Nude Ombré", desc: "Seamless fade from creamy ivory to tender soft blush pink.", price: "₹399", image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=800&auto=format&fit=crop" }
+            ],
+            galleryImages: [
+                { id: 1, title: "Classic French Micro Tip", category: "French", image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=800&auto=format&fit=crop" },
+                { id: 2, title: "Hand-painted Botanical Art", category: "Floral", image: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?q=80&w=800&auto=format&fit=crop" },
+                { id: 3, title: "Liquid Chrome Mirror Polish", category: "Chrome", image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=800&auto=format&fit=crop" },
+                { id: 4, title: "Royal Bridal Pearl Encapsulation", category: "Bridal", image: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=800&auto=format&fit=crop" },
+                { id: 5, title: "Sophisticated Matte Nude", category: "Nude", image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=800&auto=format&fit=crop" },
+                { id: 6, title: "Sparkling Champagne Dust", category: "Glitter", image: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?q=80&w=800&auto=format&fit=crop" },
+                { id: 7, title: "Reusable Custom Press-On Set", category: "Press-on", image: "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?q=80&w=800&auto=format&fit=crop" },
+                { id: 8, title: "Full Sculpted Acrylic Extensions", category: "Extensions", image: "https://images.unsplash.com/photo-1563178406-4cdc2923acbc?q=80&w=800&auto=format&fit=crop" },
+                { id: 9, title: "Abstract Gold Leaf Gel Art", category: "Custom Art", image: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=800&auto=format&fit=crop" }
+            ],
+            instagramGrid: [
+                { id: 1, image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=600&auto=format&fit=crop", caption: "Soft blush glow for the weekend ✨ #GlossyNailsCorner" },
+                { id: 2, image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=600&auto=format&fit=crop", caption: "Chrome perfection in every angle 🤍" },
+                { id: 3, image: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=600&auto=format&fit=crop", caption: "Custom bridal details created with love 💍" },
+                { id: 4, image: "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?q=80&w=600&auto=format&fit=crop", caption: "Hand-painted floral accents 🌿" },
+                { id: 5, image: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?q=80&w=600&auto=format&fit=crop", caption: "Minimalist luxury palette ☕" },
+                { id: 6, image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=600&auto=format&fit=crop", caption: "Pressed set dispatched to client 📦✨" }
+            ]
+        };
+
+        const OFFICIAL_SERVICES = [
+            { id: 1, name: "Gel Polish – Hands", price: "₹300", tag: "Best Seller", desc: "Long-lasting chip-resistant gel manicure with deep cuticle care and mirror shine." },
+            { id: 2, name: "Gel Polish – Feet", price: "₹300", tag: "Popular", desc: "Nourishing pedicure finish with high-gloss UV gel polish built for longevity." },
+            { id: 3, name: "Temporary Extension", price: "₹499", tag: "Event Special", desc: "Quick light-weight extensions ideal for parties, weddings, and weekend occasions." },
+            { id: 4, name: "Acrylic Extension", price: "₹899", tag: "High Durability", desc: "Ultra-strong handcrafted acrylic extensions sculpted for maximum length and shape durability." },
+            { id: 5, name: "Soft Gel Extension", price: "₹799", tag: "Natural Feel", desc: "Flexible, ultra-light full coverage soft gel tips that feel completely natural." },
+            { id: 6, name: "Gel Extension", price: "₹899", tag: "Luxury Polish", desc: "Hard builder gel extension providing maximum clarity, strength, and structural elegance." },
+            { id: 7, name: "Extension Removal", price: "₹150", tag: "Gentle Care", desc: "Safe, non-damaging professional removal and keratin nail hydration treatment." },
+            { id: 8, name: "Press-on Nails", price: "Starting from ₹300", tag: "Reusable", desc: "Custom handcrafted luxury press-on sets tailored precisely to your nail measurements." },
+            { id: 9, name: "Nail Art", price: "Starting from ₹30 / finger", tag: "Bespoke", desc: "Hand-painted art, chrome powders, french tips, 3D gel charms, and foil detailing." }
+        ];
+
+        function App() {
+            // LocalStorage State initialization
+            const [config, setConfig] = useState(() => {
+                const saved = localStorage.getItem("gnc_luxury_config_v1");
+                return saved ? JSON.parse(saved) : DEFAULT_CONFIG;
+            });
+
+            const [editMode, setEditMode] = useState(false);
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            const [activeCategory, setActiveCategory] = useState("All");
+            const [selectedImage, setSelectedImage] = useState(null);
+
+            // Custom Order Form State
+            const [orderForm, setOrderForm] = useState({
+                name: '',
+                phone: '',
+                design: 'French Glam',
+                shape: 'Almond',
+                size: 'M',
+                notes: ''
+            });
+
+            useEffect(() => {
+                localStorage.setItem("gnc_luxury_config_v1", JSON.stringify(config));
+            }, [config]);
+
+            const generateWhatsAppLink = (customText) => {
+                const baseUrl = "https://wa.me/919136719135";
+                const defaultMsg = customText || "Hello Glossy Nails Corner! I visited your website and would like to enquire about your nail services.";
+                return `${baseUrl}?text=${encodeURIComponent(defaultMsg)}`;
+            };
+
+            const handleCustomFormSubmit = (e) => {
+                e.preventDefault();
+                const msg = `Hello Glossy Nails Corner! I would like to place a custom nail order:\n\n• Name: ${orderForm.name}\n• Phone/WhatsApp: ${orderForm.phone}\n• Preferred Design: ${orderForm.design}\n• Nail Shape: ${orderForm.shape}\n• Size: ${orderForm.size}\n• Additional Details: ${orderForm.notes || 'None'}\n\nPlease confirm availability and custom pricing!`;
+                window.open(generateWhatsAppLink(msg), '_blank');
+            };
+
+            const handleEditPressOnPrice = (index, newPrice) => {
+                const updated = [...config.pressOnProducts];
+                updated[index].price = newPrice;
+                setConfig({ ...config, pressOnProducts: updated });
+            };
+
+            const handleEditImageUrl = (section, index, newUrl) => {
+                const updatedSection = [...config[section]];
+                updatedSection[index].image = newUrl;
+                setConfig({ ...config, [section]: updatedSection });
+            };
+
+            const categories = ["All", "French", "Floral", "Chrome", "Bridal", "Nude", "Glitter", "Press-on", "Extensions", "Custom Art"];
+
+            const filteredGallery = activeCategory === "All" 
+                ? config.galleryImages 
+                : config.galleryImages.filter(img => img.category === activeCategory);
+
+            return (
+                <div class="min-h-screen flex flex-col relative font-sans text-espresso bg-champagne">
+                    
+                    {/* Top Owner Studio Mode Floating Toolbar */}
+                    <div class="bg-espresso text-ivory text-xs px-4 py-2 flex justify-between items-center z-50 shadow-md">
+                        <div class="flex items-center gap-2">
+                            <span class="inline-block w-2 h-2 rounded-full bg-gold animate-pulse"></span>
+                            <span class="font-medium tracking-wide">GLOSSY NAILS CORNER — Official Studio Portal</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <button 
+                                onClick={() => setEditMode(!editMode)}
+                                class={`px-3 py-1 rounded text-xs transition font-semibold flex items-center gap-1.5 ${editMode ? 'bg-gold text-espresso' : 'bg-white/10 hover:bg-white/20 text-gold'}`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                {editMode ? "Exit Studio Edit Mode" : "Studio Live Edit Mode"}
+                            </button>
+                            {editMode && (
+                                <button 
+                                    onClick={() => { localStorage.removeItem("gnc_luxury_config_v1"); setConfig(DEFAULT_CONFIG); }}
+                                    class="text-red-300 hover:text-red-100 underline text-xs"
+                                >
+                                    Reset Defaults
+                                </button>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* 1. FIXED GLASS NAVIGATION BAR */}
+                    <header class="sticky top-0 z-40 glass-header transition-all duration-300">
+                        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+                            
+                            {/* Logo */}
+                            <a href="#home" class="flex flex-col group">
+                                <span class="font-serif text-2xl md:text-3xl font-bold tracking-widest text-espresso group-hover:text-gold transition">
+                                    GLOSSY NAILS CORNER
+                                </span>
+                                <span class="text-[9px] uppercase tracking-[0.3em] text-gold -mt-1 font-sans">
+                                    Bhayandar East • Studio
+                                </span>
+                            </a>
+
+                            {/* Desktop Nav Links */}
+                            <nav class="hidden lg:flex items-center space-x-8 text-xs uppercase tracking-widest font-medium text-espresso/80">
+                                <a href="#home" class="hover:text-gold transition">Home</a>
+                                <a href="#services" class="hover:text-gold transition">Services & Prices</a>
+                                <a href="#gallery" class="hover:text-gold transition">Gallery</a>
+                                <a href="#pressons" class="hover:text-gold transition">Press-Ons</a>
+                                <a href="#custom-order" class="hover:text-gold transition">Custom Order</a>
+                                <a href="#about" class="hover:text-gold transition">About</a>
+                                <a href="#studio" class="hover:text-gold transition">Studio Location</a>
+                                <a href="#contact" class="hover:text-gold transition">Contact</a>
+                            </nav>
+
+                            {/* Book Appointment CTA & Mobile Button */}
+                            <div class="flex items-center space-x-4">
+                                <a 
+                                    href={generateWhatsAppLink("Hello Glossy Nails Corner! I would like to book a nail appointment at your studio.")}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    class="hidden sm:inline-flex items-center gap-2 bg-espresso hover:bg-gold text-ivory hover:text-espresso px-5 py-2.5 rounded-full text-xs font-medium tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-glow"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                    Book Appointment
+                                </a>
+
+                                {/* Mobile Menu Toggle */}
+                                <button 
+                                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                    class="lg:hidden text-espresso p-2 focus:outline-none"
+                                    aria-label="Toggle Navigation Menu"
+                                >
+                                    {mobileMenuOpen ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Mobile Drawer */}
+                        {mobileMenuOpen && (
+                            <div class="lg:hidden bg-ivory border-t border-nude px-6 py-6 flex flex-col space-y-4 shadow-xl text-center uppercase tracking-widest text-xs">
+                                <a href="#home" onClick={()=>setMobileMenuOpen(false)} class="py-2 hover:text-gold border-b border-nude/40">Home</a>
+                                <a href="#services" onClick={()=>setMobileMenuOpen(false)} class="py-2 hover:text-gold border-b border-nude/40">Services & Menu</a>
+                                <a href="#gallery" onClick={()=>setMobileMenuOpen(false)} class="py-2 hover:text-gold border-b border-nude/40">Nail Art Gallery</a>
+                                <a href="#pressons" onClick={()=>setMobileMenuOpen(false)} class="py-2 hover:text-gold border-b border-nude/40">Press-On Nails</a>
+                                <a href="#custom-order" onClick={()=>setMobileMenuOpen(false)} class="py-2 hover:text-gold border-b border-nude/40">Custom Order</a>
+                                <a href="#about" onClick={()=>setMobileMenuOpen(false)} class="py-2 hover:text-gold border-b border-nude/40">About Brand</a>
+                                <a href="#studio" onClick={()=>setMobileMenuOpen(false)} class="py-2 hover:text-gold border-b border-nude/40">Visit Studio</a>
+                                <a href="#contact" onClick={()=>setMobileMenuOpen(false)} class="py-2 hover:text-gold border-b border-nude/40">Contact</a>
+                                <a 
+                                    href={generateWhatsAppLink("Hello Glossy Nails Corner! I would like to book an appointment.")}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    class="w-full bg-gold text-espresso font-semibold py-3 rounded-full mt-2 block shadow"
+                                >
+                                    Book Appointment via WhatsApp
+                                </a>
+                            </div>
+                        )}
+                    </header>
+
+                    {/* 2. FULL-SCREEN LUXURY HERO SECTION */}
+                    <section id="home" class="relative min-h-[90vh] flex items-center justify-center pt-8 pb-16 px-6 overflow-hidden">
+                        {/* Soft Glow Background Elements */}
+                        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blush/60 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+                        <div class="absolute bottom-10 right-10 w-[300px] h-[300px] bg-gold/15 rounded-full blur-2xl -z-10 pointer-events-none"></div>
+
+                        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                            
+                            {/* Text Content */}
+                            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ivory border border-gold/30 text-gold text-xs uppercase tracking-[0.25em] font-medium shadow-sm">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gold"></span>
+                                    Bespoke Home Nail Studio
+                                </div>
+                                <h1 class="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal leading-[1.05] tracking-tight text-espresso">
+                                    GLOSSY NAILS <br/>
+                                    <span class="italic font-light text-gold font-serif">CORNER</span>
+                                </h1>
+                                <p class="font-serif italic text-2xl md:text-3xl text-gold font-medium tracking-wide">
+                                    "Luxury at Your Fingertips."
+                                </p>
+                                <p class="text-espresso/70 text-base md:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+                                    Discover the art of beautiful nails. Explore elegant nail designs, premium gel extensions, hand-crafted press-ons, and ultra-personalized nail experiences in Bhayandar East.
+                                </p>
+                                
+                                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                                    <a 
+                                        href="#pressons"
+                                        class="w-full sm:w-auto px-8 py-4 rounded-full bg-espresso hover:bg-gold text-ivory hover:text-espresso font-medium text-xs uppercase tracking-[0.2em] transition-all duration-300 text-center shadow-lg hover:shadow-glow"
+                                    >
+                                        Explore Collection
+                                    </a>
+                                    <a 
+                                        href={generateWhatsAppLink("Hello Glossy Nails Corner! I would like to book a luxury nail appointment.")}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        class="w-full sm:w-auto px-8 py-4 rounded-full border border-espresso hover:border-gold text-espresso hover:text-gold font-medium text-xs uppercase tracking-[0.2em] transition-all duration-300 text-center bg-transparent"
+                                    >
+                                        Book An Appointment
+                                    </a>
+                                </div>
+
+                                {/* Quick Highlights */}
+                                <div class="pt-8 border-t border-nude/60 grid grid-cols-3 gap-4 text-center lg:text-left max-w-md mx-auto lg:mx-0">
+                                    <div>
+                                        <p class="font-serif text-2xl font-bold text-espresso">100%</p>
+                                        <p class="text-[10px] uppercase tracking-wider text-espresso/60">Hygienic & Safe</p>
+                                    </div>
+                                    <div>
+                                        <p class="font-serif text-2xl font-bold text-espresso">Custom</p>
+                                        <p class="text-[10px] uppercase tracking-wider text-espresso/60">Press-on Sets</p>
+                                    </div>
+                                    <div>
+                                        <p class="font-serif text-2xl font-bold text-espresso">Bespoke</p>
+                                        <p class="text-[10px] uppercase tracking-wider text-espresso/60">Nail Artistry</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Editorial Hero Visual */}
+                            <div class="lg:col-span-5 relative flex justify-center">
+                                <div class="relative w-full max-w-md aspect-[4/5] rounded-t-full rounded-b-[40px] overflow-hidden shadow-2xl border-4 border-ivory">
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1000&auto=format&fit=crop" 
+                                        alt="Glossy Nails Corner Luxury Nail Art" 
+                                        class="w-full h-full object-cover transform hover:scale-105 transition duration-700"
+                                    />
+                                    <div class="absolute inset-0 bg-gradient-to-t from-espresso/40 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-6 left-6 right-6 p-4 glass-card rounded-2xl text-center">
+                                        <p class="font-serif text-lg italic text-espresso font-semibold">Handcrafted Perfection</p>
+                                        <p class="text-[11px] text-espresso/70 uppercase tracking-widest mt-0.5">Custom Extensions & Nail Care</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* 3. OFFICIAL SERVICES & PRICE MENUS */}
+                    <section id="services" class="py-20 px-6 bg-ivory border-y border-nude/50">
+                        <div class="max-w-6xl mx-auto">
+                            
+                            <div class="text-center space-y-3 mb-16">
+                                <span class="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Official Price Menu</span>
+                                <h2 class="font-serif text-4xl sm:text-5xl font-normal text-espresso">
+                                    OUR SERVICES & PRICE MENU
+                                </h2>
+                                <div class="w-16 h-0.5 bg-gold mx-auto"></div>
+                                <p class="text-espresso/70 text-sm max-w-xl mx-auto italic font-serif">
+                                    "Prices may vary depending on the nail art design."
+                                </p>
+                            </div>
+
+                            {/* Services Grid */}
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {OFFICIAL_SERVICES.map((service) => (
+                                    <div key={service.id} class="glass-card p-6 rounded-2xl border border-nude hover:border-gold transition duration-300 flex flex-col justify-between group">
+                                        <div>
+                                            <div class="flex justify-between items-start mb-3">
+                                                <span class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded bg-blush text-espresso">
+                                                    {service.tag}
+                                                </span>
+                                                <span class="font-serif text-2xl font-bold text-gold">
+                                                    {service.price}
+                                                </span>
+                                            </div>
+                                            <h3 class="font-serif text-2xl font-semibold text-espresso mb-2 group-hover:text-gold transition">
+                                                {service.name}
+                                            </h3>
+                                            <p class="text-xs text-espresso/70 leading-relaxed font-light">
+                                                {service.desc}
+                                            </p>
+                                        </div>
+
+                                        <div class="mt-6 pt-4 border-t border-nude/40 flex justify-between items-center">
+                                            <span class="text-[11px] text-espresso/50 uppercase tracking-wider">Book Online</span>
+                                            <a 
+                                                href={generateWhatsAppLink(`Hello Glossy Nails Corner! I would like to book the service: ${service.name} (${service.price}).`)}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                class="text-xs font-medium text-espresso hover:text-gold uppercase tracking-wider flex items-center gap-1 transition"
+                                            >
+                                                Book via WhatsApp
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Additional Service Note Banner */}
+                            <div class="mt-12 p-6 rounded-2xl bg-champagne border border-gold/30 text-center space-y-2">
+                                <p class="font-serif text-lg text-espresso italic">
+                                    Looking for custom bridal sets or specific extensions?
+                                </p>
+                                <p class="text-xs text-espresso/70 max-w-2xl mx-auto">
+                                    We specialize in custom creations. Message us your reference images on WhatsApp for an exact price quote tailored to your nail size and art complexity.
+                                </p>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* 4. NAIL ART GALLERY (WITH LIGHTBOX & EDITABLE URL MODE) */}
+                    <section id="gallery" class="py-20 px-6 bg-champagne">
+                        <div class="max-w-7xl mx-auto">
+                            
+                            <div class="text-center space-y-3 mb-10">
+                                <span class="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Portfolio</span>
+                                <h2 class="font-serif text-4xl sm:text-5xl font-normal text-espresso">
+                                    NAIL ART GALLERY
+                                </h2>
+                                <p class="text-xs uppercase tracking-widest text-espresso/60">
+                                    Curated Creations & Artistry
+                                </p>
+                            </div>
+
+                            {/* Filter Tabs */}
+                            <div class="flex flex-wrap items-center justify-center gap-2 mb-12">
+                                {categories.map(cat => (
+                                    <button 
+                                        key={cat}
+                                        onClick={() => setActiveCategory(cat)}
+                                        class={`px-4 py-2 rounded-full text-xs font-medium tracking-wider uppercase transition ${activeCategory === cat ? 'bg-espresso text-ivory shadow' : 'bg-ivory hover:bg-nude text-espresso/80'}`}
+                                    >
+                                        {cat}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Gallery Image Grid */}
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {filteredGallery.map((item, index) => (
+                                    <div key={item.id} class="group relative rounded-2xl overflow-hidden shadow-luxury bg-ivory border border-nude/60">
+                                        <div class="aspect-square overflow-hidden cursor-pointer" onClick={() => setSelectedImage(item)}>
+                                            <img 
+                                                src={item.image} 
+                                                alt={item.title} 
+                                                class="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+                                            />
+                                        </div>
+
+                                        <div class="p-5 flex justify-between items-center bg-ivory">
+                                            <div>
+                                                <span class="text-[9px] uppercase tracking-widest text-gold font-semibold">{item.category}</span>
+                                                <h3 class="font-serif text-lg font-semibold text-espresso">{item.title}</h3>
+                                            </div>
+                                            <button 
+                                                onClick={() => setSelectedImage(item)}
+                                                class="p-2 rounded-full bg-champagne hover:bg-gold text-espresso hover:text-ivory transition"
+                                                title="View Fullscreen"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                                            </button>
+                                        </div>
+
+                                        {/* Studio Edit Mode URL Input */}
+                                        {editMode && (
+                                            <div class="p-3 bg-espresso/95 text-white text-xs border-t border-gold space-y-1">
+                                                <label class="block text-[10px] text-gold uppercase">Edit Photo URL:</label>
+                                                <input 
+                                                    type="text" 
+                                                    value={item.image} 
+                                                    onChange={(e) => handleEditImageUrl('galleryImages', index, e.target.value)}
+                                                    class="w-full bg-white/10 border border-white/20 rounded px-2 py-1 text-white text-[11px] focus:outline-none focus:border-gold"
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* LIGHTBOX MODAL PREVIEW */}
+                    {selectedImage && (
+                        <div class="fixed inset-0 z-50 bg-espresso/90 backdrop-blur-md flex items-center justify-center p-4" onClick={() => setSelectedImage(null)}>
+                            <div class="relative max-w-3xl w-full bg-ivory rounded-2xl overflow-hidden shadow-2xl border border-gold/40" onClick={e => e.stopPropagation()}>
+                                <button 
+                                    onClick={() => setSelectedImage(null)}
+                                    class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-espresso text-ivory flex items-center justify-center hover:bg-gold hover:text-espresso transition"
+                                >
+                                    ✕
+                                </button>
+                                <div class="max-h-[75vh] overflow-hidden">
+                                    <img src={selectedImage.image} alt={selectedImage.title} class="w-full h-full object-contain max-h-[75vh]" />
+                                </div>
+                                <div class="p-6 bg-ivory text-center">
+                                    <span class="text-xs uppercase tracking-widest text-gold font-semibold">{selectedImage.category}</span>
+                                    <h3 class="font-serif text-2xl font-bold text-espresso mt-1">{selectedImage.title}</h3>
+                                    <a 
+                                        href={generateWhatsAppLink(`Hello Glossy Nails Corner! I loved this design from your gallery: ${selectedImage.title}.`)}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        class="mt-4 inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gold text-espresso font-semibold text-xs uppercase tracking-wider hover:bg-espresso hover:text-ivory transition shadow"
+                                    >
+                                        Enquire This Design on WhatsApp
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 5. PRESS-ON NAIL COLLECTION */}
+                    <section id="pressons" class="py-20 px-6 bg-ivory border-t border-nude/60">
+                        <div class="max-w-7xl mx-auto">
+                            
+                            <div class="text-center space-y-3 mb-14">
+                                <span class="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Handcrafted Luxury Sets</span>
+                                <h2 class="font-serif text-4xl sm:text-5xl font-normal text-espresso">
+                                    PRESS-ON NAIL COLLECTION
+                                </h2>
+                                <p class="text-xs text-espresso/70 max-w-xl mx-auto">
+                                    Reusable, salon-quality extensions made to your exact size specifications. Includes application glue & prep kit.
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {config.pressOnProducts.map((product, index) => (
+                                    <div key={product.id} class="glass-card rounded-2xl overflow-hidden border border-nude hover:border-gold transition-all duration-300 flex flex-col justify-between">
+                                        <div>
+                                            <div class="h-64 overflow-hidden relative">
+                                                <img 
+                                                    src={product.image} 
+                                                    alt={product.name} 
+                                                    class="w-full h-full object-cover transform hover:scale-105 transition duration-500"
+                                                />
+                                                <span class="absolute top-4 right-4 bg-ivory/90 backdrop-blur text-espresso font-serif text-sm px-3 py-1 rounded-full border border-gold/40 shadow-sm font-semibold">
+                                                    {product.price}
+                                                </span>
+                                            </div>
+                                            <div class="p-6">
+                                                <h3 class="font-serif text-2xl font-semibold text-espresso">{product.name}</h3>
+                                                <p class="text-xs text-espresso/70 mt-2 leading-relaxed">{product.desc}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="p-6 pt-0">
+                                            {/* Studio Edit Mode Price Modifier */}
+                                            {editMode && (
+                                                <div class="mb-4 p-2 bg-espresso text-ivory rounded text-xs space-y-1">
+                                                    <label class="block text-[9px] text-gold uppercase">Edit Price Tag:</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={product.price} 
+                                                        onChange={(e) => handleEditPressOnPrice(index, e.target.value)}
+                                                        class="w-full bg-white/10 border border-white/20 rounded px-2 py-1 text-xs text-white"
+                                                    />
+                                                </div>
+                                            )}
+
+                                            <a 
+                                                href={generateWhatsAppLink(`Hello Glossy Nails Corner! I would like to order the Press-On Set: ${product.name} (${product.price}).`)}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                class="w-full py-3 rounded-xl bg-espresso hover:bg-gold text-ivory hover:text-espresso text-xs font-semibold uppercase tracking-widest transition text-center block shadow"
+                                            >
+                                                Order Now via WhatsApp
+                                            </a>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* 6. CUSTOM NAIL ORDER FORM */}
+                    <section id="custom-order" class="py-20 px-6 bg-champagne">
+                        <div class="max-w-4xl mx-auto glass-card p-8 md:p-12 rounded-3xl border border-gold/30 shadow-luxury">
+                            
+                            <div class="text-center space-y-3 mb-10">
+                                <span class="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Custom Orders</span>
+                                <h2 class="font-serif text-3xl sm:text-4xl font-normal text-espresso">
+                                    CUSTOM NAIL ORDER FORM
+                                </h2>
+                                <p class="text-xs text-espresso/70 max-w-md mx-auto">
+                                    Fill in your preferences below to instantly generate your formatted order directly into our WhatsApp chat.
+                                </p>
+                            </div>
+
+                            <form onSubmit={handleCustomFormSubmit} class="space-y-6 text-sm">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    
+                                    {/* Name */}
+                                    <div>
+                                        <label class="block text-xs uppercase tracking-wider font-semibold text-espresso mb-2">Customer Name *</label>
+                                        <input 
+                                            type="text" 
+                                            required 
+                                            placeholder="Your full name"
+                                            value={orderForm.name}
+                                            onChange={(e) => setOrderForm({...orderForm, name: e.target.value})}
+                                            class="w-full px-4 py-3 rounded-xl bg-ivory border border-nude focus:border-gold focus:outline-none text-espresso"
+                                        />
+                                    </div>
+
+                                    {/* Phone */}
+                                    <div>
+                                        <label class="block text-xs uppercase tracking-wider font-semibold text-espresso mb-2">WhatsApp Number *</label>
+                                        <input 
+                                            type="tel" 
+                                            required 
+                                            placeholder="+91 XXXXX XXXXX"
+                                            value={orderForm.phone}
+                                            onChange={(e) => setOrderForm({...orderForm, phone: e.target.value})}
+                                            class="w-full px-4 py-3 rounded-xl bg-ivory border border-nude focus:border-gold focus:outline-none text-espresso"
+                                        />
+                                    </div>
+
+                                    {/* Preferred Design */}
+                                    <div>
+                                        <label class="block text-xs uppercase tracking-wider font-semibold text-espresso mb-2">Preferred Nail Design *</label>
+                                        <input 
+                                            type="text" 
+                                            required 
+                                            placeholder="e.g. Chrome French, Minimal Floral, Bridal Pearl"
+                                            value={orderForm.design}
+                                            onChange={(e) => setOrderForm({...orderForm, design: e.target.value})}
+                                            class="w-full px-4 py-3 rounded-xl bg-ivory border border-nude focus:border-gold focus:outline-none text-espresso"
+                                        />
+                                    </div>
+
+                                    {/* Nail Shape */}
+                                    <div>
+                                        <label class="block text-xs uppercase tracking-wider font-semibold text-espresso mb-2">Nail Shape *</label>
+                                        <select 
+                                            value={orderForm.shape}
+                                            onChange={(e) => setOrderForm({...orderForm, shape: e.target.value})}
+                                            class="w-full px-4 py-3 rounded-xl bg-ivory border border-nude focus:border-gold focus:outline-none text-espresso"
+                                        >
+                                            <option value="Almond">Almond</option>
+                                            <option value="Coffin">Coffin</option>
+                                            <option value="Stiletto">Stiletto</option>
+                                            <option value="Square">Square</option>
+                                            <option value="Oval">Oval</option>
+                                            <option value="Squoval">Squoval</option>
+                                        </select>
+                                    </div>
+
+                                    {/* Nail Size */}
+                                    <div>
+                                        <label class="block text-xs uppercase tracking-wider font-semibold text-espresso mb-2">Nail Size *</label>
+                                        <select 
+                                            value={orderForm.size}
+                                            onChange={(e) => setOrderForm({...orderForm, size: e.target.value})}
+                                            class="w-full px-4 py-3 rounded-xl bg-ivory border border-nude focus:border-gold focus:outline-none text-espresso"
+                                        >
+                                            <option value="XS (14, 11, 12, 11, 8 mm)">XS (14, 11, 12, 11, 8 mm)</option>
+                                            <option value="S (15, 12, 13, 12, 9 mm)">S (15, 12, 13, 12, 9 mm)</option>
+                                            <option value="M (16, 13, 14, 13, 10 mm)">M (16, 13, 14, 13, 10 mm)</option>
+                                            <option value="L (17, 14, 15, 14, 11 mm)">L (17, 14, 15, 14, 11 mm)</option>
+                                            <option value="Custom Sizing Kit Needed">Include Custom Sizing Kit</option>
+                                        </select>
+                                    </div>
+
+                                    {/* Additional Requirements */}
+                                    <div class="md:col-span-2">
+                                        <label class="block text-xs uppercase tracking-wider font-semibold text-espresso mb-2">Additional Requirements / Reference Notes</label>
+                                        <textarea 
+                                            rows="3" 
+                                            placeholder="Mention specific length preference, colors, or reference picture details..."
+                                            value={orderForm.notes}
+                                            onChange={(e) => setOrderForm({...orderForm, notes: e.target.value})}
+                                            class="w-full px-4 py-3 rounded-xl bg-ivory border border-nude focus:border-gold focus:outline-none text-espresso"
+                                        ></textarea>
+                                    </div>
+
+                                </div>
+
+                                <button 
+                                    type="submit"
+                                    class="w-full py-4 rounded-xl bg-gold hover:bg-goldHover text-espresso font-semibold uppercase tracking-[0.2em] text-xs transition duration-300 shadow-lg flex items-center justify-center gap-2"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2 11 13"></path><path d="m22 2-7 20-4-9-9-4 20-7z"></path></svg>
+                                    Submit Order via WhatsApp
+                                </button>
+                            </form>
+
+                        </div>
+                    </section>
+
+                    {/* 7. INSTAGRAM INTEGRATION */}
+                    <section class="py-20 px-6 bg-ivory border-t border-nude/60">
+                        <div class="max-w-7xl mx-auto">
+                            
+                            <div class="text-center space-y-3 mb-12">
+                                <span class="text-xs font-semibold uppercase tracking-[0.3em] text-gold">@glossynailscorner</span>
+                                <h2 class="font-serif text-4xl sm:text-5xl font-normal text-espresso">
+                                    FOLLOW OUR WORLD OF GLOSS
+                                </h2>
+                                <p class="text-xs text-espresso/70">
+                                    Join our aesthetic nail diary on Instagram
+                                </p>
+                            </div>
+
+                            {/* Instagram Grid */}
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                                {config.instagramGrid.map((post, idx) => (
+                                    <a 
+                                        key={post.id} 
+                                        href="https://www.instagram.com/glossynailscorner/" 
+                                        target="_blank" 
+                                        rel="noreferrer"
+                                        class="group relative aspect-square rounded-2xl overflow-hidden shadow-sm border border-nude"
+                                    >
+                                        <img src={post.image} alt="Instagram Nail Post" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" />
+                                        <div class="absolute inset-0 bg-espresso/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center p-3 text-center text-ivory text-[11px]">
+                                            <p class="line-clamp-3 italic font-serif">{post.caption}</p>
+                                        </div>
+                                    </a>
+                                ))}
+                            </div>
+
+                            <div class="mt-10 text-center">
+                                <a 
+                                    href="https://www.instagram.com/glossynailscorner/" 
+                                    target="_blank" 
+                                    rel="noreferrer"
+                                    class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-espresso hover:bg-gold text-ivory hover:text-espresso font-semibold text-xs uppercase tracking-widest transition shadow"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                                    Follow On Instagram
+                                </a>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* 8. FACEBOOK INTEGRATION */}
+                    <section class="py-16 px-6 bg-champagne border-t border-nude/50">
+                        <div class="max-w-4xl mx-auto glass-card p-8 rounded-2xl border border-nude text-center space-y-4">
+                            <span class="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Social Connection</span>
+                            <h3 class="font-serif text-3xl font-normal text-espresso">CONNECT WITH US ON FACEBOOK</h3>
+                            <p class="text-xs text-espresso/70">
+                                Official Facebook Profile: <span class="font-semibold text-espresso">Adrija Samanta</span>
+                            </p>
+
+                            {/* Owner editable Facebook Link input when Studio Edit Mode is active */}
+                            {editMode && (
+                                <div class="max-w-md mx-auto p-3 bg-espresso text-ivory rounded-xl text-xs space-y-1 text-left">
+                                    <label class="block text-[10px] text-gold uppercase">Edit Facebook Profile URL:</label>
+                                    <input 
+                                        type="text" 
+                                        value={config.facebookUrl} 
+                                        onChange={(e) => setConfig({ ...config, facebookUrl: e.target.value })}
+                                        class="w-full bg-white/10 border border-white/20 rounded px-2 py-1 text-xs text-white"
+                                    />
+                                </div>
+                            )}
+
+                            <a 
+                                href={config.facebookUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-espresso text-ivory hover:bg-gold hover:text-espresso transition text-xs font-semibold uppercase tracking-widest shadow"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                                Connect on Facebook
+                            </a>
+                        </div>
+                    </section>
+
+                    {/* 9. ABOUT OUR BRAND */}
+                    <section id="about" class="py-20 px-6 bg-ivory">
+                        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                            
+                            <div class="md:col-span-5 relative">
+                                <div class="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border-4 border-champagne">
+                                    <img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=800&auto=format&fit=crop" alt="Glossy Nails Studio Elegance" class="w-full h-full object-cover" />
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-7 space-y-6">
+                                <span class="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Philosophy</span>
+                                <h2 class="font-serif text-4xl sm:text-5xl font-normal text-espresso leading-tight">
+                                    THE ART OF BEAUTIFUL NAILS
+                                </h2>
+                                <p class="text-sm text-espresso/80 leading-relaxed font-light">
+                                    At Glossy Nails Corner, we believe nails are a canvas for personal luxury. Every manicure is crafted with meticulous attention to detail, precision cuticle preparation, and high-performance products to ensure ultimate durability and aesthetic perfection.
+                                </p>
+                                <p class="text-sm text-espresso/80 leading-relaxed font-light">
+                                    Whether you desire timeless nude elegance, intricate hand-painted nail art, or handcrafted press-on sets tailored precisely to your nail bed measurements, our studio offers a calm, hygienic, and deeply personalized beauty experience.
+                                </p>
+                                <div class="pt-2">
+                                    <p class="font-serif italic text-xl text-gold font-medium">"Beauty engineered with care & passion."</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* 10. HOME-BASED NAIL STUDIO */}
+                    <section id="studio" class="py-20 px-6 bg-champagne border-t border-nude/60">
+                        <div class="max-w-6xl mx-auto">
+                            
+                            <div class="glass-card p-8 md:p-14 rounded-3xl border border-gold/30 shadow-luxury grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                                
+                                <div class="lg:col-span-7 space-y-4">
+                                    <span class="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Private Appointment Studio</span>
+                                    <h2 class="font-serif text-3xl sm:text-4xl font-normal text-espresso">VISIT OUR STUDIO</h2>
+                                    <p class="text-sm text-espresso/80 leading-relaxed">
+                                        "Enjoy a personalised nail experience at Glossy Nails Corner. Our home-based studio offers dedicated appointments and customised nail services."
+                                    </p>
+                                    
+                                    <div class="space-y-2 pt-2 text-xs text-espresso/90">
+                                        <p class="flex items-center gap-2">
+                                            <svg class="text-gold" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                            <strong class="font-semibold">Public Location:</strong> Sai Baba Nagar, Navghar Road, Bhayandar East, Mumbai, Maharashtra.
+                                        </p>
+                                        <p class="flex items-center gap-2">
+                                            <svg class="text-gold" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                            <strong class="font-semibold">Policy:</strong> Home-based nail studio • Strictly Appointment-Only Visits.
+                                        </p>
+                                    </div>
+
+                                    {/* Privacy Note */}
+                                    <div class="p-4 rounded-xl bg-ivory border border-nude text-xs text-espresso/70 italic">
+                                        🔒 <strong>Privacy Note:</strong> For client privacy and dedicated session slotting, exact flat and building details are shared securely via WhatsApp immediately following appointment confirmation.
+                                    </div>
+                                </div>
+
+                                <div class="lg:col-span-5 flex flex-col gap-4 text-center">
+                                    <a 
+                                        href={generateWhatsAppLink("Hello Glossy Nails Corner! I would like to book a studio appointment at Bhayandar East.")}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        class="w-full py-4 rounded-xl bg-espresso hover:bg-gold text-ivory hover:text-espresso font-semibold text-xs uppercase tracking-widest transition shadow-lg flex items-center justify-center gap-2"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                        Request Appointment on WhatsApp
+                                    </a>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* 14. CONTACT SECTION & 15. LUXURY FOOTER */}
+                    <footer id="contact" class="bg-espresso text-ivory pt-16 pb-12 px-6 border-t border-gold/20">
+                        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
+                            
+                            {/* Brand Info */}
+                            <div class="space-y-4">
+                                <h3 class="font-serif text-3xl font-bold tracking-widest text-ivory">GLOSSY NAILS CORNER</h3>
+                                <p class="font-serif italic text-gold text-lg">"Luxury at Your Fingertips."</p>
+                                <p class="text-xs text-ivory/60 leading-relaxed font-light">
+                                    Bespoke nail artistry, custom extensions, and hand-crafted press-on sets in Mumbai.
+                                </p>
+                            </div>
+
+                            {/* Quick Navigation */}
+                            <div class="space-y-3">
+                                <h4 class="text-xs uppercase tracking-[0.2em] text-gold font-semibold">Quick Links</h4>
+                                <ul class="space-y-2 text-xs text-ivory/70 font-light">
+                                    <li><a href="#home" class="hover:text-gold transition">Home</a></li>
+                                    <li><a href="#services" class="hover:text-gold transition">Services & Prices</a></li>
+                                    <li><a href="#gallery" class="hover:text-gold transition">Nail Art Gallery</a></li>
+                                    <li><a href="#pressons" class="hover:text-gold transition">Press-On Nails</a></li>
+                                    <li><a href="#custom-order" class="hover:text-gold transition">Custom Order Form</a></li>
+                                    <li><a href="#about" class="hover:text-gold transition">About Brand</a></li>
+                                </ul>
+                            </div>
+
+                            {/* Official Details */}
+                            <div class="space-y-3">
+                                <h4 class="text-xs uppercase tracking-[0.2em] text-gold font-semibold">Official Contact</h4>
+                                <ul class="space-y-2 text-xs text-ivory/70 font-light">
+                                    <li><strong>WhatsApp:</strong> +91 9136719135</li>
+                                    <li><strong>Instagram:</strong> @glossynailscorner</li>
+                                    <li><strong>Facebook:</strong> Adrija Samanta</li>
+                                    <li><strong>Location:</strong> Bhayandar East, Mumbai</li>
+                                </ul>
+                            </div>
+
+                            {/* Social CTA */}
+                            <div class="space-y-4">
+                                <h4 class="text-xs uppercase tracking-[0.2em] text-gold font-semibold">Direct Enquiries</h4>
+                                <a 
+                                    href={generateWhatsAppLink()}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    class="w-full block py-3 text-center rounded-xl bg-gold hover:bg-goldHover text-espresso font-semibold text-xs uppercase tracking-widest transition"
+                                >
+                                    Chat on WhatsApp
+                                </a>
+                                <p class="text-[10px] text-ivory/50">
+                                    Fast response time for appointments & order customizations.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        {/* Copyright */}
+                        <div class="max-w-7xl mx-auto pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center text-xs text-ivory/50">
+                            <p>© {new Date().getFullYear()} GLOSSY NAILS CORNER. All rights reserved.</p>
+                            <p class="mt-2 sm:mt-0 font-serif italic text-gold">Designed with luxury in mind.</p>
+                        </div>
+                    </footer>
+
+                    {/* 13. FLOATING WHATSAPP BUTTON */}
+                    <a 
+                        href={generateWhatsAppLink()}
+                        target="_blank"
+                        rel="noreferrer"
+                        class="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-2xl hover:scale-110 transition duration-300"
+                        title="Chat on WhatsApp"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    </a>
+
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
